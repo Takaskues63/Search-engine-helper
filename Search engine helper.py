@@ -1,65 +1,44 @@
 names_list = ['Jujutsu Kaisen', 'Mo Dao Zu Shi', 'One Piece', 'Apothecary Diaries']
 
 def check_in_list(user_name_search):
+    input_letters = set()
+    possible_names = []
 
-    names_list_separated_by_letters = []
+    for letter in user_name_search:
+        input_letters.add(letter.lower())
 
     for name in names_list:
-
-        name_by_letters = []
+        name_by_letters, similar_letters, wrong_letters, other_letters = [], [], [], []
         
         for letter in name:
-            if letter !=' ':
+            if letter != ' ':
                 name_by_letters.append(letter.lower())
-            else:
-                continue
 
-        names_list_separated_by_letters.append(name_by_letters)    
+        for letter in input_letters:
+            if letter not in similar_letters and letter in name_by_letters:
+                times = list(input_letters).count(letter)
 
-    print('\n'*20)
-    print(f'Searching for: {user_input}')
-    print()
+                for i in range(times):
+                    similar_letters.append(letter)
 
-    possible_names = []
-    names_with_similar_letters = []
-    name_id = 0
+            if letter not in name_by_letters:
+                wrong_letters.append(letter)
 
-    for name in names_list_separated_by_letters:
-        input_sum = 0
-        name_sum = 0
-        correct_letter = 0
-        similar_letters_in_name = []
+        for letter in name_by_letters:
+            if letter not in similar_letters and letter not in wrong_letters:
+                other_letters.append(letter)
 
-        for letter in user_name_search:
-            wrong_letter = 0
-            input_sum += 1
+        if len(wrong_letters) >= 1 or len(other_letters) >= 1:
+            similarity_points = len(similar_letters) / (len(wrong_letters) + len(other_letters))
 
-            for i in name:
+        if (len(similar_letters) > len(wrong_letters) and similarity_points > 0.65) or (len(similar_letters) > len(wrong_letters) and similarity_points <= 0.2):
+            possible_names.append(name)
 
-                if i not in user_name_search:
-                    wrong_letter += 1
-
-            if name.count(letter.lower()) > similar_letters_in_name.count(letter.lower()): 
-                similar_letters_in_name.append(letter.lower())
-                name_sum += 1
-                correct_letter += 1
-
-            else:
-                continue
-            
         
-        names_with_similar_letters.append(similar_letters_in_name)
-
-        if name_sum / input_sum >= 0.65 and correct_letter > wrong_letter:
-            possible_names.append(names_list[name_id])
-    
-        name_id += 1
-    
-    print(f'Results: {possible_names}')
-    print()
-    
-            
+    print(possible_names)
+        
 print('\n'*20)
+
 user_input = input('Enter name: ')
 
 check_in_list(user_input)
