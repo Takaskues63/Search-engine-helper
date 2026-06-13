@@ -1,39 +1,69 @@
-# **Search Engine Helper 🔍**
+# Fuzzy Name Search
 
-A simple and lightweight Python script for searching and matching names from a predefined list. This program uses a custom "fuzzy search" algorithm that allows it to find relevant results even if the user's input has partial matches or minor typos.
+A lightweight Python script that finds matching names from a list even when the search query contains typos or misspellings. Originally built for searching anime, movies, or any other titles by name.
 
-## **📌 Description**
+## How It Works
 
-The script contains a basic dataset (a list of strings, currently popular titles like *Jujutsu Kaisen, Mo Dao Zu Shi, One Piece, Apothecary Diaries*). When a user enters a search query, the program:
+The algorithm uses a **dual-condition matching** system — a name is added to results if either condition is satisfied:
 
-1. Removes all spaces and converts letters to lowercase for an objective comparison.  
-2. Splits both the search query and the database names into individual letters.  
-3. Counts the number of shared letters between the input and the target names.  
-4. Returns the result if the match ratio is **54% or higher**, and the number of correct letters exceeds the number of wrong ones.
+1. **Per-word match** — at least **70%** of a single word's letters are found in the query.
+2. **Whole-name match** — at least **54%** of the full name's letters (spaces excluded) are found across the entire query.
 
-## **🚀 Features**
+This two-pronged approach handles both partial matches (you remember one word clearly) and fuzzy full-title matches (you roughly remember the whole thing but with typos).
 
-* **Case-Insensitive:** ONE PIECE and one piece are treated exactly the same.  
-* **Ignores Spaces:** A query like mo daozu shi will still successfully find the correct match.  
-* **Fault Tolerant:** The algorithm relies on the presence of correct characters, so it can forgive minor typos or incomplete inputs.
+**Example:**
+```
+Enter name: jujucu kasen
+['Jujutsu Kaisen']
 
-## **🛠️ How to Use**
+Enter name: won pece
+['One Piece']
 
-1. Make sure you have [Python 3.x](https://www.python.org/) installed on your machine.  
-2. Clone this repository or download the Search engine helper.py file.  
-3. Run the script in your terminal or command prompt:  
-   python "Search engine helper.py"
+Enter name: apotecary
+['Apothecary Diaries']
 
-4. Enter the name you want to search for when the Enter name: prompt appears.
+Enter name: modao
+['Mo Dao Zu Shi']
+```
 
-## **💡 Example**
+## Getting Started
 
-Enter name: jujutsu  
+No external libraries needed — runs on pure Python 3.
 
-Searching for: jujutsu
+```bash
+python search.py
+```
 
-Results: \['Jujutsu Kaisen'\]
+You'll be prompted to enter a name. Type `x` to exit.
 
-## **📝 Developer Notes**
+## Customizing the Name List
 
-This project was created for educational purposes to demonstrate how to work with loops, lists, and custom string-filtering logic in Python. You can easily expand the names\_list with your own data or integrate this search function into a larger project.
+Edit the `names` list at the top of the script to add your own titles:
+
+```python
+names = ['Jujutsu Kaisen', 'MoDao ZuShi', 'One Piece', 'Apothecary Diaries']
+```
+
+> Words within a title are split by spaces.
+
+## Adjusting Sensitivity
+
+Two thresholds control matching behavior:
+
+```python
+# Per-word threshold
+if len(same_letters) / len(word) >= 0.70 ...
+
+# Whole-name threshold
+... or len(same_letters_in_name) / len(name) >= 0.54
+```
+
+| Threshold | Default | Lower → more matches | Higher → fewer false positives |
+|-----------|---------|----------------------|-------------------------------|
+| Per-word  | `0.70`  | `0.55`               | `0.85`                        |
+| Full-name | `0.54`  | `0.40`               | `0.65`                        |
+
+## Limitations
+
+- The search is **order-independent**: letters are matched regardless of their position, so very short words (1–2 letters) may match too broadly.
+- **Case-insensitive** — all comparisons are done in lowercase, and results are printed in lowercase.
