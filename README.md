@@ -9,7 +9,7 @@ The script contains a basic dataset (a list of strings, currently popular titles
 1. Removes all spaces and converts letters to lowercase for an objective comparison.  
 2. Splits both the search query and the database names into individual letters.  
 3. Counts the number of shared letters between the input and the target names.  
-4. Returns the result if the match ratio is **65% or higher**, and the number of correct letters exceeds the number of wrong ones.
+4. Returns the result if the match ratio is **54% or higher**, and the number of correct letters exceeds the number of wrong ones.
 
 ## **🚀 Features**
 
